@@ -47,6 +47,7 @@ const replaceTemplate = (temp, prod) => {
     output = output.replace(/{%PRICE%}/g, prod.price);
     output = output.replace(/{%FROM%}/g, prod.from);
     output = output.replace(/{%ID%}/g, prod.id);
+    output = output.replace(/{%DESCRIPTION%}/g, prod.description);
 
     if (!prod.organic) output = output.replace(/{%NOT_ORGANIC%}/g, 'not-organic');
 
@@ -65,10 +66,10 @@ const dataObj = JSON.parse(data);
 
 const server = http.createServer((req, res) => {
     // Response that we are sending back from the server: 
-    const pathName = req.url;
+    const { query, pathname } = url.parse(req.url, true);
 
     // Overveiw Page
-    if (pathName === '/' || pathName === '/overview'){
+    if (pathname === '/' || pathname === '/overview'){
         res.writeHead(200, { 'Content-type': 'text/html'});
 
         // Need to join otherwise product cards are in array format
@@ -78,11 +79,16 @@ const server = http.createServer((req, res) => {
         res.end(output);
 
     // Product Page
-    } else if (pathName === '/product'){
-        res.end('This is the PRODUCT');
+    } else if (pathname === '/product'){
+        res.writeHead(200, { 'Content-type': 'text/html'});
+
+        const product = dataObj[query.id];
+        const output = replaceTemplate(tempProduct, product);
+
+        res.end(output);
 
     // API
-    } else if (pathName === '/api'){
+    } else if (pathname === '/api'){
         res.writeHead(200, { 'Content-type': 'application/json'});
         res.end(data);
 
