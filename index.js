@@ -5,6 +5,7 @@ const http = require('http');
 
 const url = require('url');
 
+const replaceTemplate = require('./modules/replaceTemplate');
 
 //////////////////////////////////
 // FILE Building
@@ -37,22 +38,6 @@ const url = require('url');
 
 /////////////////////////////
 // SERVER Building
-
-const replaceTemplate = (temp, prod) => {
-    let output = temp.replace(/{%PRODUCTNAME%}/g, prod.productName);
-    output = output.replace(/{%EMOJI%}/g, prod.image);
-    output = output.replace(/{%NUTRIENTS%}/g, prod.nutrients);
-    output = output.replace(/{%QUANTITY%}/g, prod.quantity);
-    output = output.replace(/{%PRICE%}/g, prod.price);
-    output = output.replace(/{%PRICE%}/g, prod.price);
-    output = output.replace(/{%FROM%}/g, prod.from);
-    output = output.replace(/{%ID%}/g, prod.id);
-    output = output.replace(/{%DESCRIPTION%}/g, prod.description);
-
-    if (!prod.organic) output = output.replace(/{%NOT_ORGANIC%}/g, 'not-organic');
-
-    return output;
-}
 
 // Note: Can do synchronous version of readFile here because we are in the top level code and this will only run once
 // in the beginning when we load up the application. (Cannot do this in the http.createServer() b/c it is called each time there is a request causing code blocking.)
